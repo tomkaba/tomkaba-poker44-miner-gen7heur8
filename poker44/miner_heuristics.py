@@ -1529,11 +1529,11 @@ def _load_gen7heur1_profile() -> dict:
     global _GEN7HEUR1_PROFILE
     if _GEN7HEUR1_PROFILE is not None:
         return _GEN7HEUR1_PROFILE
-    env_path = os.getenv("POKER44_GEN7HEUR1_PROFILE", "")
+    env_path = os.getenv("POKER44_GEN7HEUR7_PROFILE", "")
     if env_path:
         profile_path = Path(env_path)
     else:
-        profile_path = Path(__file__).resolve().parents[1] / "models" / "benchmark_heuristic_profile.json"
+        profile_path = Path(__file__).resolve().parents[1] / "models" / "benchmark_heuristic_profile_gen7heur7.json"
     import json as _json
     with open(profile_path, "r", encoding="utf-8") as _f:
         _GEN7HEUR1_PROFILE = _json.load(_f)
@@ -1695,18 +1695,18 @@ def score_chunk_gen7heur1(chunk: List[dict]) -> Tuple[float, str]:
     return round(max(0.0, min(1.0, score)), 6), "gen7heur1"
 
 
-def score_chunk_gen7heur5(chunk: List[dict]) -> Tuple[float, str]:
-    """Score a chunk with the gen7heur5 profile (same math as gen7heur1)."""
+def score_chunk_gen7heur7(chunk: List[dict]) -> Tuple[float, str]:
+    """Score a chunk with the gen7heur7 profile (same math as gen7heur1)."""
     score, route = score_chunk_gen7heur1(chunk)
     if route == "gen7heur1":
-        return score, "gen7heur5"
-    return score, route.replace("gen7heur1", "gen7heur5")
+        return score, "gen7heur7"
+    return score, route.replace("gen7heur1", "gen7heur7")
 
 
 
 
-def score_chunks_gen7heur6(chunks: List[List[dict]]) -> Tuple[List[float], List[str], Dict[str, int]]:
-    """Score chunks with gen7heur5 and rebalance near-threshold cases to 50/50."""
+def score_chunks_gen7heur8(chunks: List[List[dict]]) -> Tuple[List[float], List[str], Dict[str, int]]:
+    """Score chunks with gen7heur7 and rebalance near-threshold cases to 50/50."""
     if not chunks:
         return [], [], {
             "n_chunks": 0,
@@ -1724,9 +1724,9 @@ def score_chunks_gen7heur6(chunks: List[List[dict]]) -> Tuple[List[float], List[
     scores: List[float] = []
     routes: List[str] = []
     for chunk in chunks:
-        score, _ = score_chunk_gen7heur5(chunk)
+        score, _ = score_chunk_gen7heur7(chunk)
         scores.append(float(score))
-        routes.append("gen7heur6")
+        routes.append("gen7heur8")
 
     n = len(scores)
     initial_bot_indices = [idx for idx, s in enumerate(scores) if s >= threshold]
@@ -1742,14 +1742,14 @@ def score_chunks_gen7heur6(chunks: List[List[dict]]) -> Tuple[List[float], List[
         candidates = sorted(initial_bot_indices, key=lambda idx: (scores[idx] - threshold, idx))
         for idx in candidates[:need]:
             scores[idx] = round(threshold - eps, 6)
-            routes[idx] = "gen7heur6_rebalance"
+            routes[idx] = "gen7heur8_rebalance"
             flips += 1
     elif initial_bots < target_bots:
         need = target_bots - initial_bots
         candidates = sorted(initial_human_indices, key=lambda idx: (threshold - scores[idx], idx))
         for idx in candidates[:need]:
             scores[idx] = round(threshold + eps, 6)
-            routes[idx] = "gen7heur6_rebalance"
+            routes[idx] = "gen7heur8_rebalance"
             flips += 1
 
     final_bots = sum(1 for s in scores if s >= threshold)
@@ -1776,23 +1776,23 @@ def get_chunk_scorer_startup_check(scorer: str) -> Dict[str, object]:
     scorer_norm = (scorer or "").strip().lower()
     info: Dict[str, object] = {
         "scorer": scorer_norm,
-        "active": scorer_norm in {"gen7heur6"},
+        "active": scorer_norm in {"gen7heur8"},
         "ok": True,
         "error": None,
         "details": {},
     }
 
-    if scorer_norm in {"gen7heur6"}:
-        env_path = os.getenv("POKER44_GEN7HEUR1_PROFILE", "")
+    if scorer_norm in {"gen7heur8"}:
+        env_path = os.getenv("POKER44_GEN7HEUR7_PROFILE", "")
         profile_path = (
             Path(env_path)
             if env_path
-            else Path(__file__).resolve().parents[1] / "models" / "benchmark_heuristic_profile.json"
+            else Path(__file__).resolve().parents[1] / "models" / "benchmark_heuristic_profile_gen7heur7.json"
         )
         details = {
             "profile_path": str(profile_path),
             "profile_exists": profile_path.exists(),
-            "rebalance_target": "50/50" if scorer_norm == "gen7heur6" else "disabled",
+            "rebalance_target": "50/50" if scorer_norm == "gen7heur8" else "disabled",
         }
         info["details"] = details
         try:
