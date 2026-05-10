@@ -1,18 +1,21 @@
 {
-  "schema_version": "1",
-  "open_source": true,
-  "model_name": "poker44_gen7heur6",
-  "model_version": "7.6",
-  "framework": "python-heuristic-rebalanced",
-  "license": "MIT",
-  "repo_url": "https://github.com/tomkaba/poker44-miner-gen7heur6",
-  "repo_commit": "6b9f3c6",
-  "inference_mode": "remote",
-  "training_data_statement": "Trained on public benchmark snapshots; no validator-private data used.",
-  "data_attestation": "This miner does not train on validator-private human data.",
-  "implementation_files": [
-    "neurons/miner.py",
-    "poker44/miner_heuristics.py"
-  ],
-  "implementation_sha256": "4fd2ddba41cb2ebc514e8fcd9316df463987d0d94cedb2ec1590ce7c959aa831"
+    "schema_version": "1",
+    "open_source": true,
+    "model_name": "poker44_gen7heur8",
+    "model_version": "7.8",
+    "framework": "python-heuristic-rebalanced",
+    "license": "MIT",
+    "repo_url": "https://github.com/tomkaba/tomkaba-poker44-miner-gen7heur8",
+    "repo_commit": "dd512717bd15eba552df1a7c5b98a6fcd2df326b",
+    "inference_mode": "remote",
+    "training_data_statement": "Trained on public human corpus and offline-generated bot chunks. No validator-private data used.",
+    "training_data_sources": ["hands_generator/human_hands/poker_hands_combined.json.gz"],
+    "data_attestation": "This miner does not train on validator-private human data.",
+    "implementation_files": [
+        "neurons/miner.py",
+        "poker44/miner_heuristics.py",
+        "models/benchmark_heuristic_profile_gen7heur7.json"
+    ],
+    "implementation_sha256": "4c9ec924511915165eb86e416c53d791d9d974f37d16e2ecf09e42cf26f52e19",
+    "notes": "Gen7heur7 profile with 50/50 per-batch rebalancing."
 }
