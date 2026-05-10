@@ -6,10 +6,12 @@
     "framework": "python-heuristic-rebalanced",
     "license": "MIT",
     "repo_url": "https://github.com/tomkaba/tomkaba-poker44-miner-gen7heur8",
-    "repo_commit": "dd512717bd15eba552df1a7c5b98a6fcd2df326b",
+    "repo_commit": "f7a6bbce2b6a6e409ab2fd31b578a316b4cd8a10",
     "inference_mode": "remote",
     "training_data_statement": "Trained on public human corpus and offline-generated bot chunks. No validator-private data used.",
-    "training_data_sources": ["hands_generator/human_hands/poker_hands_combined.json.gz"],
+    "training_data_sources": [
+        "hands_generator/human_hands/poker_hands_combined.json.gz"
+    ],
     "data_attestation": "This miner does not train on validator-private human data.",
     "implementation_files": [
         "neurons/miner.py",
